@@ -14,7 +14,7 @@ namespace ClassTransformer.Translator
             get { return "C#"; }
         }
 
-        public IEnumerable<CodeClass> GetClasses(string text)
+        public CodeFile GetClasses(string text)
         {
             var lines = text.Split('\n');
             lines = RemoveEmptyLines(lines);
@@ -23,7 +23,7 @@ namespace ClassTransformer.Translator
             lines = RemoveAttributes(lines);
             lines = RemoveNamespace(lines);
 
-            var classes = GetClasses(lines);
+            var classes = GetFile(lines);
             return classes;
         }
 
@@ -60,42 +60,68 @@ namespace ClassTransformer.Translator
             return lines.Skip(2).SkipLast(1).ToArray();
         }
 
-        private IEnumerable<CodeClass> GetClasses(string[] lines)
+        private CodeFile GetFile(string[] lines)
         {
-            List<List<string>> classesLines = GetClassLines(lines);
-            return classesLines.Select(c => GetClasses(c)).ToArray();
+
+            List<ParseObject> classesLines = GetClassObjects(lines);
+            return new CodeFile()
+            {
+                Classes = classesLines.Where(c => c.Type == "class").Select(c => GetClasses(c)).ToArray(),
+                Enums = classesLines.Where(c => c.Type == "enum").Select(c => GetEnums(c)).ToArray(),
+            };
         }
 
-        private static List<List<string>> GetClassLines(string[] lines)
+        private static List<ParseObject> GetClassObjects(string[] lines)
         {
-            var classesLines = new List<List<string>>();
+            var classesLines = new List<ParseObject>();
             foreach (var line in lines)
             {
                 if (line.Contains(" class "))
                 {
-                    classesLines.Add(new List<string>());
+                    classesLines.Add(new ParseObject()
+                    {
+                        Type = "class",
+                        Lines = new List<string>(),
+                    });
+                }
+                else if (line.Contains(" enum "))
+                {
+                    classesLines.Add(new ParseObject()
+                    {
+                        Type = "enum",
+                        Lines = new List<string>(),
+                    });
                 }
 
-                classesLines.Last().Add(line);
+                classesLines.Last().Lines.Add(line);
             }
 
             return classesLines;
         }
 
-        private CodeClass GetClasses(List<string> lines)
+        private CodeClass GetClasses(ParseObject parseObject)
         {
+            var lines = parseObject.Lines;
             var result = new CodeClass();
-            (result.Name, lines) = GetClassName(lines);
+            (result.Name, lines) = GetObjectName(lines, "class");
             (result.Properties, lines) = GetClassProperties(lines); 
-
             return result;
         }
 
-        private (string, List<string>) GetClassName(List<string> lines)
+        private CodeEnum GetEnums(ParseObject parseObject)
+        {
+            var lines = parseObject.Lines;
+            var result = new CodeEnum();
+            (result.Name, lines) = GetObjectName(lines, "enum");
+            (result.Entries, lines) = GetEnumEntries(lines);
+            return result;
+        }
+
+        private (string, List<string>) GetObjectName(List<string> lines, string objectKeyword)
         {
             var line = lines.First();
             line = line.TrimStart("public ").TrimStart("private ").TrimStart("protected ").TrimStart("internal ");
-            line = line.TrimStart("class ");
+            line = line.TrimStart($"{objectKeyword} ");
             line = Regex.Replace(line.Split()[0], @"[^0-9a-zA-Z\ ]+", "");
             return (line, lines.Skip(1).ToList());
         }
@@ -126,5 +152,28 @@ namespace ClassTransformer.Translator
 
             return (resultProperties, resultLines);
         }
+
+        private (List<string>, List<string>) GetEnumEntries(List<string> lines)
+        {
+            var resultEntries = new List<string>();
+            foreach (var line in lines)
+            {
+                var formatted = line.Trim(',');
+                if (formatted == "{" || formatted == "}")
+                {
+                    continue;
+                }
+
+                resultEntries.Add(formatted);
+            }
+
+            return (resultEntries, lines);
+        }
     }
+}
+
+class ParseObject
+{
+    public string Type { get; set; }
+    public List<string> Lines { get; set; }
 }

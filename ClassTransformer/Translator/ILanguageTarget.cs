@@ -6,6 +6,6 @@ namespace ClassTransformer.Translator
     public interface ILanguageTarget
     {
         string Label { get; }
-        string Stringify(IEnumerable<CodeClass> codeClasses);
+        string Stringify(CodeFile codeClasses);
     }
 }
