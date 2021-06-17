@@ -73,15 +73,22 @@ namespace ClassTransformer.Translator
             {
                 if (stringifyConfig.ConvertClassToInteface)
                 {
-                    result += $"\t{ToLowerCammelcase(property)}: {TranslateMethod(property)};\n";
+                    result += $"\t{ToLowerCammelcase(property)}: {GetType(property)};\n";
                 }
                 else
                 {
-                    result += $"\tpublic {ToLowerCammelcase(property)}: {TranslateMethod(property)};\n";
+                    result += $"\tpublic {ToLowerCammelcase(property)}: {GetType(property)};\n";
                 }
             }
 
             return result;
+        }
+
+        private string GetType(CodeProperty property)
+        {
+            var type = TranslateType(property);
+            type = property.IsArray ? $"{type}[]" : type;
+            return type;
         }
 
         private static string ToLowerCammelcase(CodeProperty property)
@@ -92,13 +99,10 @@ namespace ClassTransformer.Translator
             return firstLetterFormatted + name.Substring(firstLetterFormatted.Length);
         }
 
-        private string TranslateMethod(CodeProperty property)
+        private string TranslateType(CodeProperty property)
         {
             switch (property.Type)
             {
-                case "int[]":
-                case "decimal[]":
-                    return "number[]";
                 case "int":
                 case "decimal":
                     return "number";

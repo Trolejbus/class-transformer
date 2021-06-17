@@ -9,6 +9,8 @@ namespace ClassTransformer.Translator
 {
     public class CSSource : ILanguageSource
     {
+        private readonly string[] ARRAY_TYPES = new string[] { "List<", "ICollection<", "IEnumerable<", "IList<" };
+
         public string Label
         {
             get { return "C#"; }
@@ -148,10 +150,14 @@ namespace ClassTransformer.Translator
                 var lineSplitted = withoutDefaultValue.Split(" ")
                     .Where(l => !modifiers.Any(m => m == l))
                     .ToList();
+                var type = lineSplitted[0];
+                var isArray = this.IsArray(type);
+                var realType = isArray ? RemoveArrayType(type) : type;
                 resultProperties.Add(new CodeProperty()
                 {
                     Name = lineSplitted[1],
-                    Type = lineSplitted[0],
+                    Type = realType,
+                    IsArray = isArray,
                 });
             }
 
@@ -173,6 +179,22 @@ namespace ClassTransformer.Translator
             }
 
             return (resultEntries, lines);
+        }
+
+        private bool IsArray(string type)
+        {
+            return type.EndsWith("[]") || (ARRAY_TYPES.Any(t => type.StartsWith(t)) && type.EndsWith(">"));
+        }
+
+        private string RemoveArrayType(string type)
+        {
+            var result = type;
+            foreach(var arrayType in ARRAY_TYPES)
+            {
+                result = result.TrimStart(arrayType);
+            }
+
+            return result.TrimEnd(">").TrimEnd("[]");
         }
     }
 }
