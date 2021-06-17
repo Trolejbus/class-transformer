@@ -18,6 +18,11 @@ namespace ClassTransformer
         public ILanguageSource SelectedSource { get; set; }
         public ILanguageTarget SelectedTarget { get; set; }
 
+        private StringifyConfig stringifyConfig = new StringifyConfig()
+        {
+            ConvertClassToInteface = true,
+        };
+
         public Form1()
         {
             InitializeComponent();
@@ -25,6 +30,7 @@ namespace ClassTransformer
             comboBox2.DataSource = Targets;
             comboBox1.DisplayMember = "Label";
             comboBox2.DisplayMember = "Label";
+            classToInterfaceCheckBox.Checked = stringifyConfig.ConvertClassToInteface;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -53,7 +59,12 @@ namespace ClassTransformer
 
             var text = richTextBox1.Text;
             var classes = SelectedSource.GetClasses(text);
-            richTextBox2.Text = SelectedTarget.Stringify(classes);
+            richTextBox2.Text = SelectedTarget.Stringify(classes, stringifyConfig);
+        }
+
+        private void classToInterfaceCheckBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+
         }
     }
 }

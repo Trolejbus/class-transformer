@@ -36,6 +36,7 @@ namespace ClassTransformer
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.classToInterfaceCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -48,6 +49,7 @@ namespace ClassTransformer
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(1);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -57,8 +59,9 @@ namespace ClassTransformer
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
-            this.splitContainer1.Size = new System.Drawing.Size(2203, 1206);
-            this.splitContainer1.SplitterDistance = 734;
+            this.splitContainer1.Size = new System.Drawing.Size(907, 441);
+            this.splitContainer1.SplitterDistance = 302;
+            this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 0;
             // 
             // groupBox1
@@ -67,8 +70,10 @@ namespace ClassTransformer
             this.groupBox1.Controls.Add(this.richTextBox1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(1);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(734, 1206);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(1);
+            this.groupBox1.Size = new System.Drawing.Size(302, 441);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Source";
@@ -77,31 +82,37 @@ namespace ClassTransformer
             // 
             this.comboBox1.DisplayMember = "Label";
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(12, 57);
+            this.comboBox1.Location = new System.Drawing.Point(5, 21);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(1);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(302, 49);
+            this.comboBox1.Size = new System.Drawing.Size(127, 23);
             this.comboBox1.TabIndex = 1;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox1.Location = new System.Drawing.Point(12, 123);
+            this.richTextBox1.Location = new System.Drawing.Point(5, 45);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(1);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(716, 1077);
+            this.richTextBox1.Size = new System.Drawing.Size(297, 397);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.classToInterfaceCheckBox);
             this.groupBox2.Controls.Add(this.comboBox2);
             this.groupBox2.Controls.Add(this.richTextBox2);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(1);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1465, 1206);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(1);
+            this.groupBox2.Size = new System.Drawing.Size(603, 441);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Target";
@@ -110,28 +121,43 @@ namespace ClassTransformer
             // 
             this.comboBox2.DisplayMember = "Label";
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(6, 57);
+            this.comboBox2.Location = new System.Drawing.Point(2, 21);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(1);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(302, 49);
+            this.comboBox2.Size = new System.Drawing.Size(127, 23);
             this.comboBox2.TabIndex = 2;
             this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // richTextBox2
             // 
-            this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox2.Location = new System.Drawing.Point(6, 123);
+            this.richTextBox2.Location = new System.Drawing.Point(2, 45);
+            this.richTextBox2.Margin = new System.Windows.Forms.Padding(1);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(1447, 1077);
+            this.richTextBox2.Size = new System.Drawing.Size(598, 397);
             this.richTextBox2.TabIndex = 0;
             this.richTextBox2.Text = "";
             // 
+            // classToInterfaceCheckBox
+            // 
+            this.classToInterfaceCheckBox.AutoSize = true;
+            this.classToInterfaceCheckBox.Location = new System.Drawing.Point(133, 23);
+            this.classToInterfaceCheckBox.Name = "classToInterfaceCheckBox";
+            this.classToInterfaceCheckBox.Size = new System.Drawing.Size(175, 19);
+            this.classToInterfaceCheckBox.TabIndex = 3;
+            this.classToInterfaceCheckBox.Text = "Convert classes to interfaces";
+            this.classToInterfaceCheckBox.UseVisualStyleBackColor = true;
+            this.classToInterfaceCheckBox.CheckedChanged += new System.EventHandler(this.classToInterfaceCheckBox_CheckedChanged);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(17F, 41F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2203, 1206);
+            this.ClientSize = new System.Drawing.Size(907, 441);
             this.Controls.Add(this.splitContainer1);
+            this.Margin = new System.Windows.Forms.Padding(1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -140,6 +166,7 @@ namespace ClassTransformer
             this.splitContainer1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -153,6 +180,7 @@ namespace ClassTransformer
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.CheckBox classToInterfaceCheckBox;
     }
 }
 

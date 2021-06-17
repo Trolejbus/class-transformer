@@ -133,14 +133,19 @@ namespace ClassTransformer.Translator
 
             foreach (var line in lines)
             {
-                var isProperty = line.Replace(" ", "").EndsWith("{get;set;}");
+                var withoutDefaultValue = line.Split("=").First().Trim();
+                var trimmedSpaces = withoutDefaultValue.Replace(" ", "");
+                var isProperty = trimmedSpaces.EndsWith("{get;set;}") ||
+                    trimmedSpaces.EndsWith("{get;}") ||
+                    trimmedSpaces.EndsWith("{set;}") ||
+                    trimmedSpaces.EndsWith("{set;get;}");
                 if (!isProperty)
                 {
                     continue;
                 }
 
                 var modifiers = new string[] { "private", "protected", "public", "internal" };
-                var lineSplitted = line.Split(" ")
+                var lineSplitted = withoutDefaultValue.Split(" ")
                     .Where(l => !modifiers.Any(m => m == l))
                     .ToList();
                 resultProperties.Add(new CodeProperty()

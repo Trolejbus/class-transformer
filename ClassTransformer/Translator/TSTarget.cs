@@ -12,7 +12,7 @@ namespace ClassTransformer.Translator
             get { return "Typescript"; }
         }
 
-        public string Stringify(CodeFile file)
+        public string Stringify(CodeFile file, StringifyConfig stringifyConfig)
         {
             var result = "";
             foreach (var codeEnum in file.Enums)
@@ -24,7 +24,7 @@ namespace ClassTransformer.Translator
 
             foreach (var codeClass in file.Classes)
             {
-                result += StringifyClass(codeClass);
+                result += StringifyClass(codeClass, stringifyConfig);
                 result += "\n";
             }
 
@@ -50,20 +50,35 @@ namespace ClassTransformer.Translator
             return result;
         }
 
-        private string StringifyClass(CodeClass codeClass)
+        private string StringifyClass(CodeClass codeClass, StringifyConfig stringifyConfig)
         {
             var result = "";
-            result += $"export class {codeClass.Name} {{\n";
-            result = StringifyParameters(result, codeClass.Properties);
+            if (stringifyConfig.ConvertClassToInteface)
+            {
+                result += $"export interface {codeClass.Name} {{\n";
+            }
+            else
+            {
+                result += $"export class {codeClass.Name} {{\n";
+            }
+
+            result = StringifyParameters(result, codeClass.Properties, stringifyConfig);
             result += "}\n";
             return result;
         }
 
-        private string StringifyParameters(string result, List<CodeProperty> properties)
+        private string StringifyParameters(string result, List<CodeProperty> properties, StringifyConfig stringifyConfig)
         {
             foreach (var property in properties)
             {
-                result += $"\tpublic {ToLowerCammelcase(property)}: {TranslateMethod(property)};\n";
+                if (stringifyConfig.ConvertClassToInteface)
+                {
+                    result += $"\t{ToLowerCammelcase(property)}: {TranslateMethod(property)};\n";
+                }
+                else
+                {
+                    result += $"\tpublic {ToLowerCammelcase(property)}: {TranslateMethod(property)};\n";
+                }
             }
 
             return result;
@@ -81,11 +96,16 @@ namespace ClassTransformer.Translator
         {
             switch (property.Type)
             {
+                case "int[]":
+                case "decimal[]":
+                    return "number[]";
                 case "int":
                 case "decimal":
                     return "number";
                 case "bool":
                     return "boolean";
+                case "DateTime":
+                    return "Date";
                 default:
                     return property.Type;
             };
